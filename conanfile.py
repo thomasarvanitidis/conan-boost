@@ -1,6 +1,7 @@
 from conans import ConanFile
 from conans import tools
 import os
+import sysconfig
 
 # From from *1 (see below, b2 --show-libraries), also ordered following linkage order
 # see https://github.com/Kitware/CMake/blob/master/Modules/FindBoost.cmake to know the order
@@ -232,6 +233,13 @@ class BoostConan(ConanFile):
                 self.deps_cpp_info["bzip2"].include_paths[0].replace('\\', '/'),
                 self.deps_cpp_info["bzip2"].lib_paths[0].replace('\\', '/'),
                 self.deps_cpp_info["bzip2"].libs[0])
+
+        if not self.options.without_python:
+            contents += "\nusing python : %s : %s : %s : %s ;" % (
+                sysconfig.get_python_version(),
+                sysconfig.sys.executable,
+                sysconfig.get_path('include'),
+                sysconfig.get_path('stdlib'))
 
         toolset, version, exe = self.get_toolset_version_and_exe()
         exe = compiler_command or exe  # Prioritize CXX
