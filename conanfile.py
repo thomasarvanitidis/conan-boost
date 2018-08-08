@@ -2,6 +2,7 @@ from conans import ConanFile
 from conans import tools
 import os
 import sysconfig
+from distutils.sysconfig import get_python_inc
 
 # From from *1 (see below, b2 --show-libraries), also ordered following linkage order
 # see https://github.com/Kitware/CMake/blob/master/Modules/FindBoost.cmake to know the order
@@ -238,7 +239,7 @@ class BoostConan(ConanFile):
             contents += "\nusing python : %s : %s : %s : %s ;" % (
                 sysconfig.get_python_version(),
                 sysconfig.sys.executable,
-                sysconfig.get_path('include'),
+                get_python_inc(),
                 sysconfig.get_path('stdlib'))
 
         toolset, version, exe = self.get_toolset_version_and_exe()
